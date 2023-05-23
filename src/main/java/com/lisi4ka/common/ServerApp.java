@@ -17,12 +17,14 @@ import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 public class ServerApp {
     public static CityLinkedList cities = new CityLinkedList();
     public Queue<String> queue = new LinkedList<>();
     public static HashMap<String, String> users = new HashMap<>();
     public static HashMap<String, Queue<String>> queueMap = new HashMap<>();
+    ForkJoinPool forkJoinPool = new ForkJoinPool();
     ExecutorService executor = Executors.newFixedThreadPool(3);
     public static ExecutorService invokeExecutor = Executors.newCachedThreadPool();
 
@@ -38,7 +40,13 @@ public class ServerApp {
             serverSocketChannel.bind(new InetSocketAddress(host, 9856));
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             SelectionKey key;
-
+            Runnable basic = () ->
+            {
+                MegaAnswerManager megaAnswerManager = new MegaAnswerManager();
+                forkJoinPool.invoke(megaAnswerManager);
+            };
+            Thread thread = new Thread(basic);
+            thread.start();
             while (true) {
                 if (selector.select() <= 0)
                     continue;
@@ -105,8 +113,8 @@ public class ServerApp {
                             iterator.remove();
                             continue;
                         }
-                        AnswerManager answerManager = new AnswerManager(socketChannel, answer);
-                        executor.execute(answerManager);
+                        MegaAnswerManager.keyQueue.add(key);
+                        MegaAnswerManager.answerQueue.add(answer);
                     }
                     iterator.remove();
                 }

@@ -34,10 +34,13 @@ public class Invoker {
                 Command cmd = commands.get(command[0]);
                 String result;
                 if (command.length==1) {
+
                     result = cmd.execute();
+                    System.out.println(result);
                 }
                 else{
                     result = cmd.execute(command[1]);
+                    System.out.println(result);
                 }
                 return result;
             }
