@@ -4,6 +4,7 @@ import com.lisi4ka.utils.CityLinkedList;
 import com.lisi4ka.utils.PackagedCommand;
 import com.lisi4ka.utils.PackagedResponse;
 import com.lisi4ka.utils.ResponseStatus;
+import org.postgresql.util.MD5Digest;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -14,10 +15,14 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
+
+import static java.lang.Thread.sleep;
 
 public class ServerApp {
     public static CityLinkedList cities = new CityLinkedList();
@@ -27,12 +32,18 @@ public class ServerApp {
     ForkJoinPool forkJoinPool = new ForkJoinPool();
     ExecutorService executor = Executors.newFixedThreadPool(3);
     public static ExecutorService invokeExecutor = Executors.newCachedThreadPool();
+    public static HashMap<String, String> logins = new HashMap<>(){{
+        put("123", "202cb962ac59075b964b07152d234b70");
+    }};
+
+    public ServerApp() {
+    }
 
     private void run() {
         try {
             System.out.println("Server started");
             Invoker invoker = new Invoker(cities);
-            queue.add(invoker.run("load"));
+            queue.add(invoker.run("load", "nobody"));
             InetAddress host = InetAddress.getByName("localhost");
             Selector selector = Selector.open();
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -63,39 +74,10 @@ public class ServerApp {
                         queueMap.put(sc.getRemoteAddress().toString(), new LinkedList<>());
                     }
                     if (key.isValid() && key.isReadable()) {
-                        SocketChannel sc = (SocketChannel) key.channel();
-                        users.put(sc.getRemoteAddress().toString(), "");
-                        queueMap.put(sc.getRemoteAddress().toString(), new LinkedList<>());
-                        queueMap.get(sc.getRemoteAddress().toString()).add("Enter login " + sc.getRemoteAddress());
-                        ByteBuffer bb = ByteBuffer.allocate(8192);
-                        boolean flag = true;
-                        try {
-                            sc.read(bb);
-                        } catch (SocketException | EOFException ex) {
-                            sc.close();
-                            flag = false;
-                            System.out.print("Client close connection!\nServer will keep running\nTry running another client to re-establish connection\n");
-                        }
-                        if (flag) {
-                            String result = new String(bb.array()).trim();
-                            byte[] data = Base64.getDecoder().decode(result);
-                            PackagedCommand packagedCommand = null;
-                            try {
-                                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-                                packagedCommand = (PackagedCommand) ois.readObject();
-                                ois.close();
-                            } catch (EOFException ignored) {
-                            }
-                            if (packagedCommand != null) {
-                                InvokerManager invokerManager;
-                                if (packagedCommand.getCommandArguments() == null) {
-                                    invokerManager = new InvokerManager(sc.getRemoteAddress().toString(), packagedCommand.getCommandName());
-                                } else {
-                                    invokerManager = new InvokerManager(sc.getRemoteAddress().toString(), packagedCommand.getCommandName() + " " + packagedCommand.getCommandArguments());
-                                }
-                                invokeExecutor.execute(invokerManager);
-                            }
-                        }
+                        RequestManager requestManager = new RequestManager(key);
+                        Thread thread1 = new Thread(requestManager);
+                        executor.submit(thread1);
+                        sleep(1);
                     }
                     if (key.isValid() && key.isWritable()) {
                         SocketChannel socketChannel = (SocketChannel) key.channel();

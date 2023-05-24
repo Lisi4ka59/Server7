@@ -27,20 +27,25 @@ public class Invoker {
         commands.put("execute_script", new NullCommand());
         commands.put("exit", new NullCommand());
     }
-    public String run(String commandText) {
+    public String run(String commandText, String user) {
         try {
             String[] command =  commandText.split(" ");
             if (commands.containsKey(command[0])) {
                 Command cmd = commands.get(command[0]);
                 String result;
-                if (command.length==1) {
+                if ("add".equals(command[0]) || "add_if_min".equals(command[0])){
+                    result = cmd.execute(command[1], user);
+                }else if("clear".equals(command[0])){
+                    result = cmd.execute("", user);
+                }else {
+                    if (command.length == 1) {
 
-                    result = cmd.execute();
-                    System.out.println(result);
-                }
-                else{
-                    result = cmd.execute(command[1]);
-                    System.out.println(result);
+                        result = cmd.execute();
+                        //System.out.println(result);
+                    } else {
+                        result = cmd.execute(command[1]);
+                        //System.out.println(result);
+                    }
                 }
                 return result;
             }

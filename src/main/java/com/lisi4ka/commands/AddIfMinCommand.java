@@ -30,8 +30,8 @@ public class AddIfMinCommand implements Command{
     }
 
     @Override
-    public String execute(String args) {
-        City city = AddCommand.getCityArgs(args);
+    public String execute(String args, String login) {
+        City city = AddCommand.getCityArgs(args, login);
         if (addIfMin(city)) {
             idRepeat+=1;
             collection.sort(new CityComparator());

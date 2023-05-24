@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="postgresql" type="repository">
+  <library name="postgresql1" type="repository">
     <properties maven-id="org.postgresql:postgresql:42.6.0" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar!/" />

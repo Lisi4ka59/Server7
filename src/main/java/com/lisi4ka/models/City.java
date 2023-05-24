@@ -30,8 +30,9 @@ public class City implements Jsonable, Comparable<City> {
     private Government government; //Поле может быть null
     private StandardOfLiving standardOfLiving; //Поле может быть null
     private Human governor; //Поле может быть null
+    private String user;
     public City (int id, String name, Coordinates coordinates, Long population, double area, int metersAboveSeaLevel,
-                 Climate climate, Government government, StandardOfLiving standardOfLiving, Human governor){
+                 Climate climate, Government government, StandardOfLiving standardOfLiving, Human governor, String user){
         //Date date = new Date();
         //id = date.getTime() + idRepeat;
         this.id = id;
@@ -45,6 +46,7 @@ public class City implements Jsonable, Comparable<City> {
         this.government = government;
         this.governor = governor;
         this.metersAboveSeaLevel = metersAboveSeaLevel;
+        this.user = user;
     }
     public City (JsonObject jsonObject){
         final JsonKey nameKey = Jsoner.mintJsonKey("name", "");
@@ -102,6 +104,7 @@ public class City implements Jsonable, Comparable<City> {
         }
         this.creationDate=creationDate;
     }
+    public String getUser(){return user;}
 
     public String getCreationDate (){
         return creationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
@@ -241,7 +244,7 @@ public class City implements Jsonable, Comparable<City> {
     }
     @Override
     public String toString(){
-        return String.format("Name: %s\nID: %d\nCreation date: %s\nCoordinates: %sStandard of living: %s\nGovernment: %s\nClimate: %s\nArea: %sPopulation: %d\nMeters above sea level: %d\nGovernor %s", getName(), getId(), getCreationDate(), getCoordinates(), getStandardOfLiving(), getGovernment(), getClimate(), getStringArea(), getPopulation(), getMetersAboveSeaLevel(), getGovernor());
+        return String.format("Name: %s\nUser: %s\nID: %d\nCreation date: %s\nCoordinates: %sStandard of living: %s\nGovernment: %s\nClimate: %s\nArea: %sPopulation: %d\nMeters above sea level: %d\nGovernor %s", getName(), getUser(), getId(), getCreationDate(), getCoordinates(), getStandardOfLiving(), getGovernment(), getClimate(), getStringArea(), getPopulation(), getMetersAboveSeaLevel(), getGovernor());
     }
 
     @Override

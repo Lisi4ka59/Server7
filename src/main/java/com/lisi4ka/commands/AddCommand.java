@@ -19,14 +19,14 @@ public class AddCommand implements Command {
         this.collection = collection;
     }
     @Override
-    public String execute(String args) {
-        City city = getCityArgs(args);
+    public String execute(String args, String login) {
+        City city = getCityArgs(args, login);
         collection.add(city);
         idRepeat+=1;
         collection.sort(new CityComparator());
         return "Congratulations! City added to collection\n" + defaultSave(collection);
     }
-    public static City getCityArgs(String args){
+    public static City getCityArgs(String args, String login){
         String[] cityArgs = args.split(",");
         String name = cityArgs[0];
         double x = Double.parseDouble(cityArgs[1]);
@@ -60,6 +60,6 @@ public class AddCommand implements Command {
             governor = new Human(age, birthday);
         }
         Coordinates coordinates = new Coordinates(x, y);
-        return new City(1, name, coordinates, population, area, metersAboveSeaLevel, climate, government, standardOfLiving, governor);
+        return new City(1, name, coordinates, population, area, metersAboveSeaLevel, climate, government, standardOfLiving, governor, login);
     }
 }

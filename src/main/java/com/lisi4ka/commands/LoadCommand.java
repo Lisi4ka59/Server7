@@ -27,7 +27,8 @@ public class LoadCommand implements Command {
     private String load() {
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("select id, name, coordinate_x, coordinate_y, population, area, meters_above_sea_level, climate, government, standard_of_living, governor_age, governor_birthday, creation_city_date from city");
+            ResultSet rs = stmt.executeQuery("select city.id, name, coordinate_x, coordinate_y, population, area, meters_above_sea_level, climate, government," +
+                    " standard_of_living, governor_age, governor_birthday, creation_city_date, login from city left join account on user_id = account.id");
             while (rs.next()) {
                 City city = new City(
                         rs.getInt("id"),
@@ -40,7 +41,8 @@ public class LoadCommand implements Command {
                         Government.fromInt(rs.getInt("government")),
                         StandardOfLiving.fromInt(rs.getInt("standard_of_living")),
                         (rs.getInt("governor_age") == 0 || rs.getInt("governor_birthday") == 0)? null:
-                        new Human(rs.getInt("governor_age"), rs.getDate("governor_birthday"))
+                        new Human(rs.getInt("governor_age"), rs.getDate("governor_birthday")),
+                        rs.getString("login")
                         );
                 city.setCreationDate(rs.getTimestamp("creation_city_date").toLocalDateTime());
                 collection.add(city);

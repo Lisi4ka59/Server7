@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class BdConnect {
-    //String url = "jdbc:postgresql://helios.cs.ifmo.ru/studs?user=s368570&password=wbhX&1731&ssl=true";
-    static String url = "jdbc:postgresql://localhost/postgres?user=postgres&password=Misha";
+    //static String url = "jdbc:postgresql://helios.cs.ifmo.ru/studs?user=s368570&password=Mishaqwe0059";
+    static String url = "jdbc:postgresql://localhost/postgres?user=postgres&password=Mishaqwe0059";
     public static Connection conn;
 
     static {
