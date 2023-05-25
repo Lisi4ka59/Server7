@@ -34,6 +34,7 @@ public class ServerApp {
     public static ExecutorService invokeExecutor = Executors.newCachedThreadPool();
     public static HashMap<String, String> logins = new HashMap<>(){{
         put("123", "202cb962ac59075b964b07152d234b70");
+        put("kirill", "d8578edf8458ce06fbc5bb76a58c5ca4");
     }};
 
     public ServerApp() {

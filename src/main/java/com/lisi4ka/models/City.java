@@ -113,28 +113,7 @@ public class City implements Jsonable, Comparable<City> {
         return id;
     }
     public void setId (Integer id){
-        if (id == null) {
-            throw new NullPointerException("Field id can not be null!");
-        }
-        if (id<1){
-            throw new IllegalArgumentException("Field id can not be less than 1!");
-        }
-        ArrayList<Integer> list = new ArrayList<>();
-        boolean right = true;
-        for (City city:cities) {
-            list.add(city.id);
-            if (list.contains(id)) {
-                right = false;
-                System.out.printf("%s ID is not unique! ID for city %s will be generate automatic\n", getName(), getName());
-                Date date = new Date();
-                id = Math.toIntExact(date.getTime() + idRepeat);
-                idRepeat+=1;
-                this.id = id;
-            }
-        }
-        if (right){
-            this.id = id;
-        }
+        this.id = id;
     }
 
     public void setCoordinates (Coordinates coordinates){

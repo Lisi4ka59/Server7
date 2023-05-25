@@ -6,7 +6,6 @@ import com.lisi4ka.utils.CityComparator;
 import java.util.List;
 
 import static com.lisi4ka.utils.CityLinkedList.idRepeat;
-import static com.lisi4ka.commands.DefaultSave.defaultSave;
 
 public class AddIfMinCommand implements Command{
     private final List<City> collection;
@@ -35,7 +34,7 @@ public class AddIfMinCommand implements Command{
         if (addIfMin(city)) {
             idRepeat+=1;
             collection.sort(new CityComparator());
-            return "City was successfully added to collection\n" + defaultSave(collection);
+            return "City was successfully added to collection\n";
         }
         else {
             return "City is not added to collection";

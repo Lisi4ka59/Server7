@@ -33,7 +33,7 @@ public class Invoker {
             if (commands.containsKey(command[0])) {
                 Command cmd = commands.get(command[0]);
                 String result;
-                if ("add".equals(command[0]) || "add_if_min".equals(command[0])){
+                if ("add".equals(command[0]) || "add_if_min".equals(command[0]) || "update".equals(command[0])){
                     result = cmd.execute(command[1], user);
                 }else if("clear".equals(command[0])){
                     result = cmd.execute("", user);

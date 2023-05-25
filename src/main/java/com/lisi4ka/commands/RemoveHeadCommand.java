@@ -5,6 +5,8 @@ import java.util.List;
 
 import static com.lisi4ka.commands.DefaultSave.defaultSave;
 
+//import static com.lisi4ka.commands.DefaultSave.defaultSave;
+
 public class RemoveHeadCommand implements Command{
     private final List<City> collection;
     public RemoveHeadCommand(List<City> collection){
